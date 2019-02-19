@@ -1,0 +1,25 @@
+{
+	"manifest_version": 2,
+	"name": "DinoParkLocalDev",
+	"description": "Connect local front end to DinoPark.",
+  "version": "0.0.1",
+  "author": "Florian Merz",
+  "homepage_url": "https://github.com/fiji-flo/dinoparklocaldev",
+	"icons": {
+		"64": "icons/icon.svg"
+	},
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "https://dinopark.k8s.dev.sso.allizom.org/"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+	"browser_action": {
+		"default_icon": {
+			"64": "icons/icon-grey.svg"
+		},
+    "default_title": "DinoParkLocalDev"
+	}
+}
