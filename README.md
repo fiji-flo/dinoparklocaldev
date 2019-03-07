@@ -23,7 +23,7 @@ mv localhost+1* ~/.mkcert
 Go into the front-end directory and run:
 
 ```bash
-export DP_SSL_KEY=~/.mkcert/localhost+1-key.pem
-export DP_SSL_CERT=~/.mkcert/localhost+1.pem
+export DP_HTTPS_KEY=~/.mkcert/localhost+1-key.pem
+export DP_HTTPS_CERT=~/.mkcert/localhost+1.pem
 npm run serve
 ```
