@@ -1,5 +1,5 @@
 const DP_PATTERN = "https://dinopark.k8s.dev.sso.allizom.org/*";
-const INDEX_PATTERN = ["https://dinopark.k8s.dev.sso.allizom.org/", "https://dinopark.k8s.dev.sso.allizom.org/beta/"];
+const INDEX_PATTERN = ["https://dinopark.k8s.dev.sso.allizom.org/*"];
 const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\.dev\.sso\.allizom\.org\/beta\/(app\.js|css|img).*/
 const BLACK_LIST = [
   "content-security-policy",
@@ -41,16 +41,18 @@ async function unsecure(e) {
 
 
 function fixJs(details) {
-  const filter = browser.webRequest.filterResponseData(details.requestId);
-  const decoder = new TextDecoder("utf-8");
-  const encoder = new TextEncoder();
+  if (details.type === "main_frame") {
+    const filter = browser.webRequest.filterResponseData(details.requestId);
+    const decoder = new TextDecoder("utf-8");
+    const encoder = new TextEncoder();
 
-  filter.ondata = event => {
-    let str = decoder.decode(event.data, { stream: true });
-    str = str.replace(/\/beta\/js\/app\.js/g, '/beta/app.js');
-    str = str.replace(/<script src="?\/beta\/js\/chunk\-vendors\.js"?><\/script>/g, '');
-    filter.write(encoder.encode(str));
-    filter.disconnect();
+    filter.ondata = event => {
+      let str = decoder.decode(event.data, { stream: true });
+      str = str.replace(/\/beta\/js\/app\.js/g, '/beta/app.js');
+      str = str.replace(/<script src="?\/beta\/js\/chunk\-vendors\.js"?><\/script>/g, '');
+      filter.write(encoder.encode(str));
+      filter.disconnect();
+    }
   }
 }
 
