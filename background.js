@@ -30,9 +30,9 @@ async function unsecure(e) {
     if (orgCsp) {
       const filtered = h.filter(h => !BLACK_LIST.includes(h.name));
       let csp = orgCsp.value;
-      csp = csp.replace(/script\-src 'self'/g, "script-src 'self' 'unsafe-eval' https://localhost:8080 https://127.0.0.1:8080");
-      csp = csp.replace(/style\-src 'self'/g, "style-src 'self' https://localhost:8080 https://127.0.0.1:8080");
-      csp = csp.replace(/img\-src 'self' data:/g, "img-src 'self' data: https://localhost:8080 https://127.0.0.1:8080");
+      csp = csp.replace(/script\-src 'self'/g, "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://localhost:8080 https://127.0.0.1:8080");
+      csp = csp.replace(/style\-src 'self'/g, "style-src 'self' 'unsafe-eval' 'unsafe-inline' https://localhost:8080 https://127.0.0.1:8080");
+      csp = csp.replace(/img\-src 'self' data:/g, "img-src 'self' 'unsafe-eval' 'unsafe-inline' data: https://localhost:8080 https://127.0.0.1:8080");
       filtered.push({ name: "content-security-policy", value: csp });
       return { responseHeaders: filtered }
     }
