@@ -11,7 +11,8 @@
   "permissions": [
     "webRequest",
     "webRequestBlocking",
-    "https://dinopark.k8s.dev.sso.allizom.org/"
+    "https://dinopark.k8s.dev.sso.allizom.org/",
+    "https://dinopark.k8s.test.sso.allizom.org/"
   ],
   "background": {
     "scripts": ["background.js"]

@@ -1,6 +1,10 @@
-const DP_PATTERN = "https://dinopark.k8s.dev.sso.allizom.org/*";
-const INDEX_PATTERN = ["https://dinopark.k8s.dev.sso.allizom.org/*"];
-const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\.dev\.sso\.allizom\.org\/beta\/(app\.js|css|img).*/
+const DP_DEV_HOST = "dinopark.k8s.dev.sso.allizom.org";
+const DP_TEST_HOST = "dinopark.k8s.test.sso.allizom.org";
+const DP_HOST_NAMES = [DP_DEV_HOST, DP_TEST_HOST];
+const DP_DEV_PATTERN = `https://${DP_DEV_HOST}/*`;
+const DP_TEST_PATTERN = `https://${DP_TEST_HOST}/*`;
+const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN];
+const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\..*\.sso\.allizom\.org\/beta\/(app\.js|css|img).*/
 const BLACK_LIST = [
   "content-security-policy",
   "x-content-type-options",
@@ -24,16 +28,11 @@ async function redirect(requestDetails) {
 
 async function unsecure(e) {
   const url = new URL(e.url);
-  if (url.hostname === "dinopark.k8s.dev.sso.allizom.org") {
+  if (DP_HOST_NAMES.includes(url.hostname)) {
     const h = e.responseHeaders;
     const orgCsp = h.find(h => h.name === "content-security-policy")
     if (orgCsp) {
       const filtered = h.filter(h => !BLACK_LIST.includes(h.name));
-      let csp = orgCsp.value;
-      csp = csp.replace(/script\-src 'self'/g, "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://localhost:8080 https://127.0.0.1:8080");
-      csp = csp.replace(/style\-src 'self'/g, "style-src 'self' 'unsafe-eval' 'unsafe-inline' https://localhost:8080 https://127.0.0.1:8080");
-      csp = csp.replace(/img\-src 'self' data:/g, "img-src 'self' 'unsafe-eval' 'unsafe-inline' data: https://localhost:8080 https://127.0.0.1:8080");
-      filtered.push({ name: "content-security-policy", value: csp });
       return { responseHeaders: filtered }
     }
   }
@@ -61,19 +60,19 @@ function enable() {
   browser.browserAction.setIcon({ path: { "64": "icons/icon.svg" } })
   browser.webRequest.onBeforeRequest.addListener(
     fixJs,
-    { urls: INDEX_PATTERN },
+    { urls: DP_PATTERN },
     ["blocking"]
   );
 
   browser.webRequest.onBeforeRequest.addListener(
     redirect,
-    { urls: [DP_PATTERN] },
+    { urls: DP_PATTERN },
     ["blocking"]
   );
 
   browser.webRequest.onHeadersReceived.addListener(
     unsecure,
-    { urls: [DP_PATTERN] },
+    { urls: DP_PATTERN },
     ["blocking", "responseHeaders"]
   );
   console.log("enabled");
