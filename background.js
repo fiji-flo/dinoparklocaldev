@@ -4,7 +4,7 @@ const DP_HOST_NAMES = [DP_DEV_HOST, DP_TEST_HOST];
 const DP_DEV_PATTERN = `https://${DP_DEV_HOST}/*`;
 const DP_TEST_PATTERN = `https://${DP_TEST_HOST}/*`;
 const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN];
-const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\..*\.sso\.allizom\.org\/beta\/(app\.js|css|img).*/
+const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\..*\.sso\.allizom\.org\/(app\.js|css|img).*/
 const BLACK_LIST = [
   "content-security-policy",
   "x-content-type-options",
@@ -47,8 +47,8 @@ function fixJs(details) {
 
     filter.ondata = event => {
       let str = decoder.decode(event.data, { stream: true });
-      str = str.replace(/\/beta\/js\/app\.js/g, '/beta/app.js');
-      str = str.replace(/<script src="?\/beta\/js\/chunk\-vendors\.js"?><\/script>/g, '');
+      str = str.replace(/\/js\/app\.js/g, '/app.js');
+      str = str.replace(/<script src="?\/js\/chunk\-vendors\.js"?><\/script>/g, '');
       filter.write(encoder.encode(str));
       filter.disconnect();
     }

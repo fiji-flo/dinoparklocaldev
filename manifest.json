@@ -1,13 +1,13 @@
 {
-	"manifest_version": 2,
-	"name": "DinoParkLocalDev",
-	"description": "Connect local front end to DinoPark.",
-  "version": "0.0.4",
+  "manifest_version": 2,
+  "name": "DinoParkLocalDev",
+  "description": "Connect local front end to DinoPark.",
+  "version": "0.0.6",
   "author": "Florian Merz",
   "homepage_url": "https://github.com/fiji-flo/dinoparklocaldev",
-	"icons": {
-		"64": "icons/icon.svg"
-	},
+  "icons": {
+    "64": "icons/icon.svg"
+  },
   "permissions": [
     "webRequest",
     "webRequestBlocking",
@@ -17,10 +17,10 @@
   "background": {
     "scripts": ["background.js"]
   },
-	"browser_action": {
-		"default_icon": {
-			"64": "icons/icon-grey.svg"
-		},
+  "browser_action": {
+    "default_icon": {
+      "64": "icons/icon-grey.svg"
+    },
     "default_title": "DinoParkLocalDev"
-	}
+  }
 }
