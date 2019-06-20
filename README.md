@@ -1,4 +1,4 @@
-# dinoparklocaldev
+# DinoParkLocalDev
 
 Proxy all the things! This helps developing [DinoPark's front-end](https://github.com/mozilla-iam/dino-park-front-end/)
 against the DinoPark developer preview: [https://dinopark.k8s.dev.sso.allizom.org/](https://dinopark.k8s.dev.sso.allizom.org/).
@@ -27,3 +27,6 @@ export DP_HTTPS_KEY=~/.mkcert/localhost+1-key.pem
 export DP_HTTPS_CERT=~/.mkcert/localhost+1.pem
 npm run serve
 ```
+
+- Acticate `DinoParkLocalDev` (click on the dino head in the toolbar so it turns red)
+- Visit [DinoPark Dev](https://dinopark.k8s.dev.sso.allizom.org/) or [DinoPark Test](https://dinopark.k8s.test.sso.allizom.org/)

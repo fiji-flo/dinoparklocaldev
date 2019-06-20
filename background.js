@@ -4,7 +4,7 @@ const DP_HOST_NAMES = [DP_DEV_HOST, DP_TEST_HOST];
 const DP_DEV_PATTERN = `https://${DP_DEV_HOST}/*`;
 const DP_TEST_PATTERN = `https://${DP_TEST_HOST}/*`;
 const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN];
-const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\..*\.sso\.allizom\.org\/(app\.js|css|img).*/
+const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\..*\.sso\.allizom\.org\/(.*.js|css|img).*/
 const BLACK_LIST = [
   "content-security-policy",
   "x-content-type-options",
