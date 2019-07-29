@@ -1,10 +1,12 @@
 const DP_DEV_HOST = "dinopark.k8s.dev.sso.allizom.org";
 const DP_TEST_HOST = "dinopark.k8s.test.sso.allizom.org";
-const DP_HOST_NAMES = [DP_DEV_HOST, DP_TEST_HOST];
+const DP_PROD_HOST = "people.mozilla.org";
+const DP_HOST_NAMES = [DP_DEV_HOST, DP_TEST_HOST, DP_PROD_HOST];
 const DP_DEV_PATTERN = `https://${DP_DEV_HOST}/*`;
 const DP_TEST_PATTERN = `https://${DP_TEST_HOST}/*`;
-const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN];
-const FRONT_END_PATTERN = /https:\/\/dinopark\.k8s\..*\.sso\.allizom\.org\/(.*.js|css|img).*/
+const DP_PROD_PATTERN = `https://${DP_PROD_HOST}/*`;
+const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN, DP_PROD_PATTERN];
+const FRONT_END_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/(.*.js|css|img).*/
 const BLACK_LIST = [
   "content-security-policy",
   "x-content-type-options",
