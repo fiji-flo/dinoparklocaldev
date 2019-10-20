@@ -49,8 +49,8 @@ function fixJs(details) {
 
     filter.ondata = event => {
       let str = decoder.decode(event.data, { stream: true });
-      str = str.replace(/\/js\/app\.js/g, '/app.js');
-      str = str.replace(/<script src="?\/js\/chunk\-vendors\.js"?><\/script>/g, '');
+      str = str.replace(/\/js\/app[A-Za-z0-9\-\.]*\.js/g, '/app.js');
+      str = str.replace(/<script src="?\/js\/chunk\-[A-Za-z0-9\-\.]*\.js"?><\/script>/g, '');
       filter.write(encoder.encode(str));
       filter.disconnect();
     }

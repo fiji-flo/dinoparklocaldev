@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "DinoParkLocalDev",
   "description": "Connect local front end to DinoPark.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Florian Merz",
   "homepage_url": "https://github.com/fiji-flo/dinoparklocaldev",
   "icons": {
