@@ -8,6 +8,7 @@ const DP_PROD_PATTERN = `https://${DP_PROD_HOST}/*`;
 const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN, DP_PROD_PATTERN];
 const FRONT_END_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/(.*.js|css|img).*/;
 const INDEX_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/[a-z]?(\?.*)?$/;
+const WHOAMI_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/whoami\/.*/;
 const BLACK_LIST = [
   'content-security-policy',
   'x-content-type-options',
@@ -33,12 +34,19 @@ const GA_CODE = `<!-- Global site tag (gtag.js) - Google Analytics -->
 let enabled = false;
 
 async function redirect(requestDetails) {
-  if (requestDetails.url.match(FRONT_END_PATTERN)) {
+  if (requestDetails.url.match(WHOAMI_PATTERN)) {
+    const url = new URL(requestDetails.url);
+    url.protocol = 'http';
+    url.hostname = 'localhost';
+    // url.hostname = 'c513f608.ngrok.io';
+    // url.port = 8084;
+    console.log(`Redirecting ssl: ${requestDetails.url} → ${url.toString()}`);
+    return { redirectUrl: url.toString() };
+  } else if (requestDetails.url.match(FRONT_END_PATTERN)) {
     const url = new URL(requestDetails.url);
     url.hostname = 'localhost';
     url.port = 8080;
     console.log(`Redirecting: ${requestDetails.url} → ${url.toString()}`);
-
     return { redirectUrl: url.toString() };
   } else if (requestDetails.url.match(INDEX_PATTERN)) {
     let filter = browser.webRequest.filterResponseData(requestDetails.requestId);
