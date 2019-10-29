@@ -45,16 +45,17 @@ function fixJs(details) {
   if (details.type === "main_frame") {
     const filter = browser.webRequest.filterResponseData(details.requestId);
     const decoder = new TextDecoder("utf-8");
-    const encoder = new TextEncoder();
+    const encoder = new TextEncoder("utf-8");
 
     filter.ondata = event => {
       let str = decoder.decode(event.data, { stream: true });
-      str = str.replace(/\/js\/app[A-Za-z0-9\-\.]*\.js/g, '/app.js');
-      str = str.replace(/<script src="?\/js\/chunk\-[A-Za-z0-9\-\.]*\.js"?><\/script>/g, '');
+      str = str.replace(/\/js\/app[A-Za-z0-9\-\.]*\.js/g, '/js/app.js');
+      str = str.replace(/\/js\/chunk-vendors[A-Za-z0-9\-\.]*\.js/g, '/js/chunk-vendors.js');
       filter.write(encoder.encode(str));
       filter.disconnect();
     }
   }
+  return {}
 }
 
 function enable() {
