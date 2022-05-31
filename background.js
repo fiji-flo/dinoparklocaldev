@@ -6,7 +6,7 @@ const DP_DEV_PATTERN = `https://${DP_DEV_HOST}/*`;
 const DP_TEST_PATTERN = `https://${DP_TEST_HOST}/*`;
 const DP_PROD_PATTERN = `https://${DP_PROD_HOST}/*`;
 const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN, DP_PROD_PATTERN];
-const FRONT_END_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/(.*.js|css|img).*/
+const FRONT_END_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/(.*.js|css|img).*/;
 const BLACK_LIST = [
   'content-security-policy',
   'x-content-type-options',
@@ -32,14 +32,13 @@ async function unsecure(e) {
   const url = new URL(e.url);
   if (DP_HOST_NAMES.includes(url.hostname)) {
     const h = e.responseHeaders;
-    const orgCsp = h.find(h => h.name === 'content-security-policy')
+    const orgCsp = h.find(h => h.name === 'content-security-policy');
     if (orgCsp) {
       const filtered = h.filter(h => !BLACK_LIST.includes(h.name));
-      return { responseHeaders: filtered }
+      return { responseHeaders: filtered };
     }
   }
 }
-
 
 function fixJs(details) {
   if (details.type === 'main_frame') {
@@ -53,14 +52,14 @@ function fixJs(details) {
       str = str.replace(/\/js\/chunk-vendors[A-Za-z0-9\-\.]*\.js/g, '/js/chunk-vendors.js');
       filter.write(encoder.encode(str));
       filter.disconnect();
-    }
+    };
   }
-  return {}
+  return {};
 }
 
 function enable() {
   enabled = true;
-  browser.browserAction.setIcon({ path: { '64': 'icons/icon.svg' } })
+  browser.browserAction.setIcon({ path: { '64': 'icons/icon.svg' } });
   browser.webRequest.onBeforeRequest.addListener(
     fixJs,
     { urls: DP_PATTERN },
@@ -94,7 +93,7 @@ function disable() {
     unsecure
   );
   enabled = false;
-  browser.browserAction.setIcon({ path: { '64': 'icons/icon-grey.svg' } })
+  browser.browserAction.setIcon({ path: { '64': 'icons/icon-grey.svg' } });
   console.log('disabled');
 }
 
