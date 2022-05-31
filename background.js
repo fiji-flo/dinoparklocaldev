@@ -7,6 +7,7 @@ const DP_TEST_PATTERN = `https://${DP_TEST_HOST}/*`;
 const DP_PROD_PATTERN = `https://${DP_PROD_HOST}/*`;
 const DP_PATTERN = [DP_DEV_PATTERN, DP_TEST_PATTERN, DP_PROD_PATTERN];
 const FRONT_END_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/(.*.js|css|img).*/;
+const INDEX_PATTERN = /https:\/\/(dinopark\.k8s\..*\.sso\.allizom|people\.mozilla)\.org\/[a-z]?(\?.*)?$/;
 const BLACK_LIST = [
   'content-security-policy',
   'x-content-type-options',
@@ -14,8 +15,22 @@ const BLACK_LIST = [
   'x-xss-protection',
 ];
 
-let enabled = false;
+const GA_CODE = `<!-- Global site tag (gtag.js) - Google Analytics -->
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-3919QT0M94"
+></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
 
+  gtag('config', 'G-3919QT0M94');
+</script>`;
+
+let enabled = false;
 
 async function redirect(requestDetails) {
   if (requestDetails.url.match(FRONT_END_PATTERN)) {
@@ -25,6 +40,21 @@ async function redirect(requestDetails) {
     console.log(`Redirecting: ${requestDetails.url} → ${url.toString()}`);
 
     return { redirectUrl: url.toString() };
+  } else if (requestDetails.url.match(INDEX_PATTERN)) {
+    let filter = browser.webRequest.filterResponseData(requestDetails.requestId);
+    const decoder = new TextDecoder('utf-8');
+    const encoder = new TextEncoder();
+    let completeData = '';
+    filter.ondata = event => {
+      const str = decoder.decode(event.data, { stream: true });
+      completeData += str;
+    };
+    filter.onstop = event => {
+      completeData = completeData.replace('<head>', '<head>' + GA_CODE);
+      console.log('Replacing data: ', completeData);
+      filter.write(encoder.encode(completeData));
+      filter.disconnect();
+    };
   }
 }
 
