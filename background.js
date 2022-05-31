@@ -49,7 +49,10 @@ function fixJs(details) {
     filter.ondata = event => {
       let str = decoder.decode(event.data, { stream: true });
       str = str.replace(/\/js\/app[A-Za-z0-9\-\.]*\.js/g, '/js/app.js');
-      str = str.replace(/\/js\/chunk-vendors[A-Za-z0-9\-\.]*\.js/g, '/js/chunk-vendors.js');
+      str = str.replace(
+        /\/js\/chunk-vendors[A-Za-z0-9\-\.]*\.js/g,
+        '/js/chunk-vendors.js'
+      );
       filter.write(encoder.encode(str));
       filter.disconnect();
     };
@@ -60,38 +63,27 @@ function fixJs(details) {
 function enable() {
   enabled = true;
   browser.browserAction.setIcon({ path: { '64': 'icons/icon.svg' } });
-  browser.webRequest.onBeforeRequest.addListener(
-    fixJs,
-    { urls: DP_PATTERN },
-    ['blocking']
-  );
+  browser.webRequest.onBeforeRequest.addListener(fixJs, { urls: DP_PATTERN }, [
+    'blocking',
+  ]);
 
-  browser.webRequest.onBeforeRequest.addListener(
-    redirect,
-    { urls: DP_PATTERN },
-    ['blocking']
-  );
+  browser.webRequest.onBeforeRequest.addListener(redirect, { urls: DP_PATTERN }, [
+    'blocking',
+  ]);
 
-  browser.webRequest.onHeadersReceived.addListener(
-    unsecure,
-    { urls: DP_PATTERN },
-    ['blocking', 'responseHeaders']
-  );
+  browser.webRequest.onHeadersReceived.addListener(unsecure, { urls: DP_PATTERN }, [
+    'blocking',
+    'responseHeaders',
+  ]);
   console.log('enabled');
 }
 
 function disable() {
-  browser.webRequest.onBeforeRequest.removeListener(
-    fixJs,
-  );
+  browser.webRequest.onBeforeRequest.removeListener(fixJs);
 
-  browser.webRequest.onBeforeRequest.removeListener(
-    redirect
-  );
+  browser.webRequest.onBeforeRequest.removeListener(redirect);
 
-  browser.webRequest.onHeadersReceived.removeListener(
-    unsecure
-  );
+  browser.webRequest.onHeadersReceived.removeListener(unsecure);
   enabled = false;
   browser.browserAction.setIcon({ path: { '64': 'icons/icon-grey.svg' } });
   console.log('disabled');
